@@ -3,12 +3,31 @@ import numpy as np
 import pandas as pd
 import ast
 
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+
 # cargar datos
 df = pd.read_csv('datasetB.zip', sep=',', encoding='utf-8', decimal='.')
 
 # cambiar tipo de datos
 df.id = df.id.astype('object')
 df.releaseDate = pd.to_datetime(df['releaseDate'], format='%Y-%m-%d')
+
+# eliminar duplicados
+df.drop_duplicates(subset='id', inplace=True)
+df.reset_index(drop=True, inplace=True) # reset index
+
+# funcion obtener lista
+def GetData(x):
+    if pd.isnull(x):
+        return np.nan
+    else: 
+        return ast.literal_eval(x)   
+    
+# invocar funcion genreList tipo lista
+df['genreList'] = df['genreList'].apply(GetData)
+df['languageList'] = df['languageList'].apply(GetData)
 
 from fastapi import FastAPI
 
@@ -110,3 +129,76 @@ def get_director(nombre_director:str):
         pelis.append({'titulo': respuesta_2[j], 'anio':respuesta_3[j], 'retorno_pelicula':respuesta_4[j], 'budget_pelicula':respuesta_5[j], 'revenue_pelicula':respuesta_6[j]})
 
     return {'director':nombre_director.title(), 'retorno_total_director':respuesta_1, 'peliculas': pelis}
+
+@app.get('/recomendacion/{titulo}')
+def recomendacion(titulo:str):
+
+    if len(df[df['title'].str.lower()==titulo.lower()]) > 0:
+
+        # indice pelicula input
+        movieIndex=df[df['title'].str.lower()==titulo.lower()].index
+        movieIndex[0]
+
+        # genero pelicula input
+        movieGenre=df['genreList'][movieIndex[0]]
+
+        # lenguaje pelicula input
+        movieLanguage=df['languageList'][movieIndex[0]]
+
+        # filtro genero
+        if movieGenre == 'No Data':
+            pass
+        else:
+            dfFilter=df[df['genreList'].apply(lambda x: True if set(x)==set(movieGenre) else False)]
+            if dfFilter.shape[0] < 6: # si cantidad de peliculas muy pequeña no filtrar 
+                dfFilter=df
+
+        # filtro lenguaje
+        dfFilter['check'] = dfFilter['language'].apply(lambda x: [True for i in movieLanguage if i in x])
+
+        # crear columna auxiliar check para filtrar el dataset 
+        dfFilter = dfFilter[dfFilter['check'].apply(lambda x: False if x==[] else True)]
+
+        #-------
+        # tfidfVectorizer
+        from sklearn.feature_extraction.text import TfidfVectorizer
+        vectorizer = TfidfVectorizer() # (ngram_range=(1.2))
+
+        tfidf_matrix = vectorizer.fit_transform(dfFilter['inputML'])
+        tfidf_vector = vectorizer.transform([dfFilter['inputML'][movieIndex[0]]])
+
+        # similitud textos
+        from sklearn.metrics.pairwise import cosine_similarity
+
+        score = cosine_similarity(tfidf_vector, tfidf_matrix).flatten()
+
+        # indices 
+        indices=np.argpartition(score, -6)[-6:]
+        
+        # ordenar
+        dfResultado = dfFilter.iloc[indices][::-1]
+
+        # lista peliculas 
+        resultadoList=dfResultado['title'].str.lower().tolist()
+        resultadoList.remove(titulo.lower())
+
+        # verificar coleccion
+        if dfResultado['collection'][movieIndex[0]] == 'Not in a Collection':
+            resultadoFinal=[]
+        else: 
+            resultadoFinal = df[df['collection']==dfResultado['collection'][movieIndex[0]]]['title'].str.lower().tolist()
+            resultadoFinal.remove(titulo.lower())
+    
+        # agregar peliculas coleccion
+        if len(resultadoFinal)!=0:
+            for i in resultadoList:
+                if i not in resultadoFinal and len(resultadoFinal) < 5:
+                    resultadoFinal.append(i)
+            respuesta=resultadoFinal
+        else:
+            respuesta=resultadoList   
+
+        return {'lista recomendada': respuesta}
+
+    else:
+        return {'¡titulo no valido!':'ingresa un titulo valido, ejemplo: Toy Story'} 
