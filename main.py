@@ -32,8 +32,6 @@ df['languageList'] = df['languageList'].apply(GetData)
 from fastapi import FastAPI
 
 #http://127.0.0.1:8000
-#.\venv\Scripts\activate
-#uvicorn main:app --reload
 
 app = FastAPI(title='PI1_MLOPS Harlan Tonguino PT01',
               description='API: 7 endpoints')
