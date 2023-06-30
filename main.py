@@ -57,7 +57,7 @@ def cantidad_filmaciones_mes(mes:str):
 @app.get('/cantidad_filmaciones_dia{dia}')
 def cantidad_filmaciones_dia(dia:str):
 
-    dict_dia={'lunes':0, 'martes':1, 'miercoles':2, 'jueves':3, 'vierne':4, 'sabado':5, 'domingo':6}
+    dict_dia={'lunes':0, 'martes':1, 'miercoles':2, 'jueves':3, 'viernes':4, 'sabado':5, 'domingo':6}
 
     if dict_dia.get(dia.lower(), -1) >= 0:
         ndia=dict_dia.get(dia.lower())
