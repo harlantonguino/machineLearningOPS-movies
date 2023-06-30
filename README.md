@@ -23,6 +23,8 @@ Desarrollar e implementar un modelo de machine learning con el objeto de realiza
 ##### merge datasets movies credits
 - dataset
 
+[>>> link to datasets:](https://drive.google.com/drive/folders/1xVffW_ZzxDqapntXYpQFA8wwOYSzXyZx?usp=drive_link)
+
 ##### dataset final usado para funciones de consulta y modelo
 - datasetB
 - datasetB.zip (comprimido)
