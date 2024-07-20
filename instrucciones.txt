@@ -1,0 +1,168 @@
+@app.get('/cantidad_filmaciones_mes/{mes}')
+def cantidad_filmaciones_mes(mes:str):
+    '''Se ingresa el mes y la funcion retorna la cantidad de peliculas que se estrenaron ese mes historicamente'''
+    return {'mes':mes, 'cantidad':respuesta}
+
+@app.get('/cantidad_filmaciones_dia{dia}')
+def cantidad_filmaciones_dia(dia:str):
+    '''Se ingresa el dia y la funcion retorna la cantidad de peliculas que se estrebaron ese dia historicamente'''
+    return {'dia':dia, 'cantidad':respuesta}
+
+@app.get('/score_titulo/{titulo}')
+def score_titulo(titulo:str):
+    '''Se ingresa el título de una filmación esperando como respuesta el título, el año de estreno y el score'''
+    return {'titulo':titulo, 'anio':respuesta, 'popularidad':respuesta}
+
+@app.get('/votos_titulo/{titulo}')
+def votos_titulo(titulo:str):
+    '''Se ingresa el título de una filmación esperando como respuesta el título, la cantidad de votos y el valor promedio de las votaciones. 
+    La misma variable deberá de contar con al menos 2000 valoraciones, 
+    caso contrario, debemos contar con un mensaje avisando que no cumple esta condición y que por ende, no se devuelve ningun valor.'''
+    return {'titulo':titulo, 'anio':respuesta, 'voto_total':respuesta, 'voto_promedio':respuesta}
+
+@app.get('/get_actor/{nombre_actor}')
+def get_actor(nombre_actor:str):
+    '''Se ingresa el nombre de un actor que se encuentre dentro de un dataset debiendo devolver el éxito del mismo medido a través del retorno. 
+    Además, la cantidad de películas que en las que ha participado y el promedio de retorno'''
+    return {'actor':nombre_actor, 'cantidad_filmaciones':respuesta, 'retorno_total':respuesta, 'retorno_promedio':respuesta}
+
+@app.get('/get_director/{nombre_director}')
+def get_director(nombre_director:str):
+    ''' Se ingresa el nombre de un director que se encuentre dentro de un dataset debiendo devolver el éxito del mismo medido a través del retorno. 
+    Además, deberá devolver el nombre de cada película con la fecha de lanzamiento, retorno individual, costo y ganancia de la misma.'''
+    return {'director':nombre_director, 'retorno_total_director':respuesta, 
+    'peliculas':respuesta, 'anio':respuesta,, 'retorno_pelicula':respuesta, 
+    'budget_pelicula':respuesta, 'revenue_pelicula':respuesta}
+
+{    'director':nombre_director, 
+    'retorno_total_director':respuesta, 
+    'peliculas': [
+                {"titulo": respuesta1, 
+                'anio':respuesta1, 
+                'retorno_pelicula':respuesta1, 
+                'budget_pelicula':respuesta1, 
+                'revenue_pelicula':respuesta1},
+                
+                {"titulo": respuesta2, 
+                'anio':respuesta2, 
+                'retorno_pelicula':respuesta2, 
+                'budget_pelicula':respuesta2, 
+                'revenue_pelicula':respuesta2},
+                ]
+}
+
+# ML
+@app.get('/recomendacion/{titulo}')
+def recomendacion(titulo:str):
+    '''Ingresas un nombre de pelicula y te recomienda las similares en una lista'''
+    return {'lista recomendada': respuesta}
+
+
+
+fastAPI
+
+>>> crear una carpeta
+>>> add folder to workspace VSC
+>>> abrir terminal
+
+>>> crear entorno virtual: se crea automaticamente carpeta 'venv'
+python -m virtualenv venv 
+
+>>> activar entorno virtual
+.\venv\Scripts\activate
+
+>>> verificar si estamos dentro del entorno virtual 
+(venv) xxx
+
+>>> librerias instaladas entorno virtual
+pip list
+
+>> instalar librerias necesarias dentro del entorno virtual
+pip install fastapi
+pip install uvicorn
+
+>>> crear archivo main.py a la misma altura de la carpeta 'venv'
+>>> crear archivo .gitignore a la misma altura de la carpeta 'venv'
+
+>>> ignorar carpeta 'venv' al hacer el commit en github: dentro del archivo .gitignore 
+/venv
+
+>>> crear archivo requirements.txt: indica las librerias usadas dentro del entorno virtual
+pip freeze > requirements.txt
+
+>>> eliminar de forma manual del archivo requirements.txt la version de las librerias
+
+>>>
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get('/')        
+def welcome():
+    return {'mensaje': 'hola'}
+>>>
+
+>>> levantar servidor
+uvicorn main:app --reload
+
+>>> servidor local
+http://127.0.0.1:8000
+
+>>> detener servidor
+ctrl+C
+
+>>> desactivar entorno virtual, vuelve a la raiz
+deactivate
+
+
+replicar en entorno virtual 
+>>> copiar main.py, requirements.txt en una nueva carpeta
+>>> realizar los pasos anteriores: crear, activar entorno
+
+>>> instalar libreria en el nuevo entorno: replicar
+pip install -r .\requirements.txt
+
+>>> comprobar
+pip list
+
+
+
+GitHUB
+
+>>> email: harlan.tonguino@hotmail.com
+>>> name: token
+
+>>> git add .
+>>> git commit -m 'xxx'
+>>> git push
+
+>>> para subir archivos de gran tamaño: comprimir archivo zip
+
+
+Render
+
+>>> registrarse
+>>> opcion web service
+>>> copiar direccion repositorio GitHUB
+
+>>> completar campos requeridos demas dejar por defecto
+nombre
+
+>>> completar campos requeridos built command
+$ pip install -r requirements.txt
+
+>>> completar campos requeridos start command
+$ uvicorn main:app --host 0.0.0.0 --port 10000
+
+https://test-yefk.onrender.com/docs#/default/get_director_get_director__nombre_director__get
+
+https://mlops-movies-4683.onrender.com/docs#/docs
+
+
+
+
+
+
+
+
+
