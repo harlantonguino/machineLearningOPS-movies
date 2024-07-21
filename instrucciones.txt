@@ -129,7 +129,7 @@ pip list
 
 GitHUB
 
->>> email: harlan.tonguino@hotmail.com
+>>> email: xxx@hotmail.com
 >>> name: token
 
 >>> git add .
